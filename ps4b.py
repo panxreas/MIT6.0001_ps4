@@ -105,14 +105,27 @@ class Message(object):
         Returns: a dictionary mapping a letter (string) to 
                  another letter (string). 
         '''
+        low_case = string.ascii_lowercase
+        up_case = string.ascii_uppercase
+        
         output = {}
         for char in self.message_text:
-            if char in string.ascii_letters:
-                for index_char in range(len(string.ascii_letters)):
-                    if string.ascii_letters[index_char] == char:
-                        output[char] = string.ascii_letters[index_char + shift]
+            
+            if char in low_case:
+                if low_case.find(char) + shift > len(low_case):
+                    output[char] = low_case[(low_case.find(char) + shift) % len(low_case)]
+                else:
+                    output[char] = low_case[low_case.find(char) + shift]
+            
+            if char in low_case:
+                if low_case.find(char) + shift > len(low_case):
+                    output[char] = low_case[(low_case.find(char) + shift) % len(low_case)]
+                else:
+                    output[char] = low_case[low_case.find(char) + shift]
+                
             else:
                 output[char] = char
+                
         return output
         
         
