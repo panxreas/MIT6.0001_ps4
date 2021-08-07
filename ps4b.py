@@ -71,7 +71,7 @@ class Message(object):
             self.valid_words (list, determined using helper function load_words)
         '''
         self.message_text = text
-        self.valid_words = load_words()
+        self.valid_words = load_words('words.txt')
 
 
     def get_message_text(self):
@@ -107,22 +107,24 @@ class Message(object):
         '''
         low_case = string.ascii_lowercase
         up_case = string.ascii_uppercase
+        plaintext = self.message_text
+        
         
         output = {}
-        for char in self.message_text:
-            
+        for char in plaintext:
+            # maches lower case letters with their shift value 
             if char in low_case:
-                if low_case.find(char) + shift > len(low_case):
+                if low_case.find(char) + shift >= len(low_case):
                     output[char] = low_case[(low_case.find(char) + shift) % len(low_case)]
                 else:
                     output[char] = low_case[low_case.find(char) + shift]
-            
-            if char in up_case:
-                if up_case.find(char) + shift > len(up_case):
+            # maches upper case letters with their shift value 
+            elif char in up_case:
+                if up_case.find(char) + shift >= len(up_case):
                     output[char] = up_case[(up_case.find(char) + shift) % len(up_case)]
                 else:
                     output[char] = up_case[up_case.find(char) + shift]
-                
+            # passes non leter characters as they are    
             else:
                 output[char] = char
                 
@@ -141,7 +143,31 @@ class Message(object):
         Returns: the message text (string) in which every character is shifted
              down the alphabet by the input shift
         '''
-        pass #delete this line and replace with your code here
+        
+        low_case = string.ascii_lowercase
+        up_case = string.ascii_uppercase
+        plaintext = self.message_text
+        
+        
+        output = {}
+        for char in plaintext:
+            # maches lower case letters with their shift value 
+            if char in low_case:
+                if low_case.find(char) + shift >= len(low_case):
+                    output[char] = low_case[(low_case.find(char) + shift) % len(low_case)]
+                else:
+                    output[char] = low_case[low_case.find(char) + shift]
+            # maches upper case letters with their shift value 
+            elif char in up_case:
+                if up_case.find(char) + shift >= len(up_case):
+                    output[char] = up_case[(up_case.find(char) + shift) % len(up_case)]
+                else:
+                    output[char] = up_case[up_case.find(char) + shift]
+            # passes non leter characters as they are    
+            else:
+                output[char] = char
+                
+        return "".join(output.values())
 
 class PlaintextMessage(Message):
     def __init__(self, text, shift):
@@ -244,5 +270,10 @@ if __name__ == '__main__':
     #TODO: WRITE YOUR TEST CASES HERE
 
     #TODO: best shift value and unencrypted story 
+    m1 = "Encrypt me plz!"
     
-    pass #delete this line and replace with your code here
+    cypher = Message(m1)
+    print((cypher.build_shift_dict(2)).keys())
+    print((cypher.build_shift_dict(2)).values())
+    print('\n')
+    print(cypher.apply_shift(2))
