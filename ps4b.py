@@ -106,29 +106,32 @@ class Message(object):
                  another letter (string). 
         '''
         low_case = string.ascii_lowercase
+        low_2 = low_case*2
+        
         up_case = string.ascii_uppercase
+        up_2 = up_case*2
+        
+        
         plaintext = self.message_text
         
+        alt_shift = 0
+        s_output = ""
+        d_output = {}
         
-        output = {}
+        if shift > len(low_case):
+            alt_shift = shift % len(low_case)
+        else:
+            alt_shift = shift
+        
         for char in plaintext:
-            # maches lower case letters with their shift value 
             if char in low_case:
-                if low_case.find(char) + shift >= len(low_case):
-                    output[char] = low_case[(low_case.find(char) + shift) % len(low_case)]
-                else:
-                    output[char] = low_case[low_case.find(char) + shift]
-            # maches upper case letters with their shift value 
+                d_output[char] = low_2[low_case.find(char) + alt_shift]
             elif char in up_case:
-                if up_case.find(char) + shift >= len(up_case):
-                    output[char] = up_case[(up_case.find(char) + shift) % len(up_case)]
-                else:
-                    output[char] = up_case[up_case.find(char) + shift]
-            # passes non leter characters as they are    
+                d_output[char] = up_2[up_case.find(char) + alt_shift]
             else:
-                output[char] = char
-                
-        return output
+                d_output[char] = char
+        
+        return d_output
         
         
     def apply_shift(self, shift):
@@ -145,29 +148,32 @@ class Message(object):
         '''
         
         low_case = string.ascii_lowercase
+        low_2 = low_case*2
+        
         up_case = string.ascii_uppercase
+        up_2 = up_case*2
+        
+        
         plaintext = self.message_text
         
+        alt_shift = 0
+        s_output = ""
+        d_output = {}
         
-        output = {}
+        if shift > len(low_case):
+            alt_shift = shift % len(low_case)
+        else:
+            alt_shift = shift
+        
         for char in plaintext:
-            # maches lower case letters with their shift value 
             if char in low_case:
-                if low_case.find(char) + shift >= len(low_case):
-                    output[char] = low_case[(low_case.find(char) + shift) % len(low_case)]
-                else:
-                    output[char] = low_case[low_case.find(char) + shift]
-            # maches upper case letters with their shift value 
+                s_output+= low_2[low_case.find(char) + alt_shift]
             elif char in up_case:
-                if up_case.find(char) + shift >= len(up_case):
-                    output[char] = up_case[(up_case.find(char) + shift) % len(up_case)]
-                else:
-                    output[char] = up_case[up_case.find(char) + shift]
-            # passes non leter characters as they are    
+                s_output += up_2[up_case.find(char) + alt_shift]
             else:
-                output[char] = char
-                
-        return "".join(output.values())
+                s_output += char
+        
+        return s_output
 
 class PlaintextMessage(Message):
     def __init__(self, text, shift):
