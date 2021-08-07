@@ -117,11 +117,11 @@ class Message(object):
                 else:
                     output[char] = low_case[low_case.find(char) + shift]
             
-            if char in low_case:
-                if low_case.find(char) + shift > len(low_case):
-                    output[char] = low_case[(low_case.find(char) + shift) % len(low_case)]
+            if char in up_case:
+                if up_case.find(char) + shift > len(up_case):
+                    output[char] = up_case[(up_case.find(char) + shift) % len(up_case)]
                 else:
-                    output[char] = low_case[low_case.find(char) + shift]
+                    output[char] = up_case[up_case.find(char) + shift]
                 
             else:
                 output[char] = char
