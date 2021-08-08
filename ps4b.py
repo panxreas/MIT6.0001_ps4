@@ -6,7 +6,7 @@
 import string
 
 ### HELPER CODE ###
-def load_words(file_name):
+def load_words(file_name='words.txt'):
     '''
     file_name (string): the name of the file containing 
     the list of words to load    
@@ -16,14 +16,14 @@ def load_words(file_name):
     Depending on the size of the word list, this function may
     take a while to finish.
     '''
-    print("Loading word list from file...")
+    #print("Loading word list from file...")
     # inFile: file
     inFile = open(file_name, 'r')
     # wordlist: list of strings
     wordlist = []
     for line in inFile:
         wordlist.extend([word.lower() for word in line.split(' ')])
-    print("  ", len(wordlist), "words loaded.")
+    #print("  ", len(wordlist), "words loaded.")
     return wordlist
 
 def is_word(word_list, word):
@@ -173,7 +173,7 @@ class Message(object):
         return s_output
 
 class PlaintextMessage(Message):
-    def __init__(self, text, shift):
+    def __init__(self, text, shift=0):
         '''
         Initializes a PlaintextMessage object        
         
@@ -190,8 +190,8 @@ class PlaintextMessage(Message):
         '''
         Message.__init__(self, text)
         self.shift = shift
-        self.encryption_dict = text.build_shift_dict(shift) 
-        self.message_text_encrypted = text.apply_shift(shift)
+        self.encryption_dict = Message(text).build_shift_dict(shift) 
+        self.message_text_encrypted = Message(text).apply_shift(shift)
         
     def get_shift(self):
         '''
@@ -228,7 +228,8 @@ class PlaintextMessage(Message):
         Returns: nothing
         '''
         self.shift = shift
-
+        self.encryption_dict = Message(self.message_text).build_shift_dict(shift) 
+        self.message_text_encrypted = Message(self.message_text).apply_shift(shift)
 
 class CiphertextMessage(Message):
     def __init__(self, text):
@@ -241,7 +242,8 @@ class CiphertextMessage(Message):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        Message.__init__(self, text)
+        
 
     def decrypt_message(self):
         '''
@@ -259,7 +261,27 @@ class CiphertextMessage(Message):
         Returns: a tuple of the best shift value used to decrypt the message
         and the decrypted message text using that shift value
         '''
-        pass #delete this line and replace with your code here
+        all_posible_text = {}
+        word_list = load_words()
+        best = 0
+        #freq = all_posible_text.values()
+        output = ()
+        
+        
+        for switch in range(len(string.ascii_lowercase)):
+            all_posible_text[switch] = [Message(self.message_text).apply_shift(switch), 0]
+            
+            for check_word in all_posible_text[switch][0].split():
+                if is_word(word_list, check_word) == True:
+                    all_posible_text[switch][1] += 1
+            if all_posible_text[switch][1] > best:
+                best = all_posible_text[switch][1]
+                output += (switch, all_posible_text[switch][0])
+        
+        
+        
+        return output
+        
 
 if __name__ == '__main__':
 
@@ -278,8 +300,11 @@ if __name__ == '__main__':
     #TODO: best shift value and unencrypted story 
     m1 = "Encrypt me plz!"
     
-    cypher = Message(m1)
-    print((cypher.build_shift_dict(50)).keys())
-    print((cypher.build_shift_dict(50)).values())
+    plain = PlaintextMessage(m1, 5)
+    decrypt = plain.get_message_text_encrypted()
+    cypher = CiphertextMessage(decrypt)
+    plain.change_shift(1)
+    print(decrypt)
+    print(cypher.decrypt_message())
     print('\n')
-    print(cypher.apply_shift(50))
+    print(cypher.apply_shift(5))
