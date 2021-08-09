@@ -7,7 +7,7 @@ import string
 from ps4a import get_permutations
 
 ### HELPER CODE ###
-def load_words(file_name):
+def load_words(file_name='words.txt'):
     '''
     file_name (string): the name of the file containing 
     the list of words to load    
@@ -18,14 +18,14 @@ def load_words(file_name):
     take a while to finish.
     '''
     
-    print("Loading word list from file...")
+    #print("Loading word list from file...")
     # inFile: file
     inFile = open(file_name, 'r')
     # wordlist: list of strings
     wordlist = []
     for line in inFile:
         wordlist.extend([word.lower() for word in line.split(' ')])
-    print("  ", len(wordlist), "words loaded.")
+    #print("  ", len(wordlist), "words loaded.")
     return wordlist
 
 def is_word(word_list, word):
@@ -70,7 +70,8 @@ class SubMessage(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        self.message_text = text
+        self.valid_words = load_words()
     
     def get_message_text(self):
         '''
@@ -78,7 +79,7 @@ class SubMessage(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        return self.message_text 
 
     def get_valid_words(self):
         '''
@@ -87,7 +88,7 @@ class SubMessage(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        return self.valid_words
                 
     def build_transpose_dict(self, vowels_permutation):
         '''
@@ -108,9 +109,17 @@ class SubMessage(object):
         Returns: a dictionary mapping a letter (string) to 
                  another letter (string). 
         '''
+        all_letters = string.ascii_letters
+        output =  {}
+        for index in range(len(VOWELS_LOWER)):
+            output[index] = vowels_permutation[index]
+            output[index] = vowels_permutation.upper()[index]
+        for letters in all_letters:
+            if letters not in output.keys():
+                output[letters] = letters
         
-        pass #delete this line and replace with your code here
-    
+        return output
+        
     def apply_transpose(self, transpose_dict):
         '''
         transpose_dict (dict): a transpose dictionary
@@ -119,7 +128,10 @@ class SubMessage(object):
         on the dictionary
         '''
         
-        pass #delete this line and replace with your code here
+        output = ""
+        for char in self.message_text:
+            output += transpose_dict.get(char, char)
+        return output
         
 class EncryptedSubMessage(SubMessage):
     def __init__(self, text):
@@ -152,7 +164,7 @@ class EncryptedSubMessage(SubMessage):
         
         Hint: use your function from Part 4A
         '''
-        pass #delete this line and replace with your code here
+        pass
     
 
 if __name__ == '__main__':

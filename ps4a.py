@@ -38,13 +38,13 @@ def get_permutations(sequence):
                 l.append(''.join(letters))
                 letters = []
     
-    return l
+    return list(set(l))
     
 
 
 
 
-print(sorted(list(set(get_permutations("smash")))))
+#print(sorted(get_permutations("smash")))
 
 
 
