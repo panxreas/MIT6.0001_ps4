@@ -112,8 +112,8 @@ class SubMessage(object):
         all_letters = string.ascii_letters
         output =  {}
         for index in range(len(VOWELS_LOWER)):
-            output[index] = vowels_permutation[index]
-            output[index] = vowels_permutation.upper()[index]
+            output[VOWELS_LOWER[index]] = vowels_permutation[index]
+            output[VOWELS_UPPER[index]] = vowels_permutation.upper()[index]
         for letters in all_letters:
             if letters not in output.keys():
                 output[letters] = letters
@@ -144,7 +144,7 @@ class EncryptedSubMessage(SubMessage):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        SubMessage.__init__(self, text)
 
     def decrypt_message(self):
         '''
@@ -164,8 +164,31 @@ class EncryptedSubMessage(SubMessage):
         
         Hint: use your function from Part 4A
         '''
-        pass
-    
+        cypher_text = SubMessage(self.message_text)
+        list_words = load_words()
+        
+        high_value_perm = {}
+        for perm in get_permutations(VOWELS_LOWER):
+            cryp_dict = cypher_text.build_transpose_dict(perm)
+            cypher_message = cypher_text.apply_transpose(cryp_dict)
+            
+            for words in cypher_message.split():
+                if is_word(list_words, words) == True:
+                    high_value_perm[perm] = high_value_perm.get(perm, 0) + 1
+                    #print(words)
+        
+        values = high_value_perm.values()
+        #print(values)
+        best = max(values)
+        #print(best)
+        output ={}
+        
+        for index in high_value_perm:
+            if high_value_perm[index] == best:
+                temp = cypher_text.build_transpose_dict(index)
+                output[index] = cypher_text.apply_transpose(temp)
+
+        return output
 
 if __name__ == '__main__':
 
@@ -173,6 +196,7 @@ if __name__ == '__main__':
     message = SubMessage("Hello World!")
     permutation = "eaiuo"
     enc_dict = message.build_transpose_dict(permutation)
+
     print("Original message:", message.get_message_text(), "Permutation:", permutation)
     print("Expected encryption:", "Hallu Wurld!")
     print("Actual encryption:", message.apply_transpose(enc_dict))
